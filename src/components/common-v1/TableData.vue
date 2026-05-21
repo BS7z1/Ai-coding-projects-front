@@ -95,7 +95,7 @@
          <cb-footer style="height: 10%;">
             <cb-pagination
                 style="margin-top: 5px"
-                @size-change=""handleSizeChange
+                @size-change="handleSizeChange"
                 :total="pager.totalRows"
                 @current-change="handleCurrentChange"
                 :current-page="pager.currentPage"
@@ -168,7 +168,7 @@ export default{
             let tmpValue
             switch(desenseType){
                 case 0:
-                    temValue = value
+                    tmpValue = value
                     break
                 case 1:
                     tmpValue = desense.desensitizeCertID(value)

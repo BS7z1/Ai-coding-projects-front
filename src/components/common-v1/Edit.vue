@@ -13,9 +13,9 @@
                 <cb-row v-for="(formItems, index) in formObj" :key="index">
                     <cb-col :span="24/colNum" v-for="(formItem, index) in formItems" :key="index">
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_CHECKBOX"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -31,9 +31,9 @@
                         </cb-checkbox-group>    
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_RADIO"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -50,9 +50,9 @@
                         </cb-radio-group>    
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_DATE"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -66,9 +66,9 @@
                         ></cb-date-picker>    
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_SELECT"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -91,27 +91,27 @@
                         </cb-select>
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_TEXT"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
                         <cb-input v-model="formModelAccess[formItem.dataName]" webkitdirectory clearable placeholder="请输入内容" :disabled="(!isEdit || formItem.editDisabled==undefined)?false:true"></cb-input>
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_TEXTAREA"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
                         <cb-input type="textarea" v-model="formModelAccess[formItem.dataName]" webkitdirectory clearable placeholder="请输入内容" :disabled="(!isEdit || formItem.editDisabled==undefined)?false:true"></cb-input>
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_TIME"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -124,9 +124,9 @@
                         ></cb-time-picker> 
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_DATE_TIME"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -140,9 +140,9 @@
                         ></cb-date-picker> 
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_YEAR_MONTH"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -156,27 +156,27 @@
                         ></cb-date-picker> 
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.Type_ReadOnly"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
                         <cb-input v-model="formModelAccess[formItem.dataName]" webkitdirectory clearable placeholder="sdfsdfsd" disabled></cb-input>
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.Type_ReadOnly_DATE"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
                         <cb-input v-model="formModelAccess[formItem.dataName]" webkitdirectory clearable placeholder="sdfsdfsd" disabled></cb-input>
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_CASCADE"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -190,9 +190,9 @@
                         ></cb-cascader>
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_YEAR"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -206,9 +206,9 @@
                         ></cb-date-picker>    
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_SWITCH"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -224,9 +224,9 @@
                         ></cb-switch>
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else-if="formItem.columnTypeClass.columnType === columnTypeClass.TYPE_DATE_RANGE"
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -242,9 +242,9 @@
                         ></cb-date-picker>    
                     </cb-form-item>
                     <cb-form-item
-                    :key="getLastFiledName(formItem.dataName)"
+                    :key="getLastFieldName(formItem.dataName)"
                     :label="formItem.showName"
-                    :prop="getLastFiledName(formItem.dataName)"
+                    :prop="getLastFieldName(formItem.dataName)"
                     v-else
                     v-show="!isEdit? true: formItem.showEdit"
                     >
@@ -368,7 +368,7 @@ export default {
         }
     },
     methods: {
-        getLastFiledName(valueStr){
+        getLastFieldName(valueStr){
             let theStr = valueStr
             let valueStrs = theStr.split('\\.')
             if(valueStrs.length>1){

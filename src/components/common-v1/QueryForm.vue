@@ -20,7 +20,6 @@
             <cb-checkbox-group v-model="advancedParamModels[formItem.dataName]" @change="change(formItem, $event)">
               <template v-for="(checkbox) in formItem.columnTypeClass.list">
                 <cb-checkbox
-                  v-for="(option, index) in formItem.columnTypeClass.options"
                   :key="checkbox.label"
                   :label="checkbox.value"
                   :checked="checkbox.isChecked"
@@ -259,7 +258,7 @@
             type="flex"
             justify="space-around"
             class="row-bg"
-            style=""margin-bottom: 2px;
+            style="margin-bottom: 2px"
         >
           <template v-if="index===0">
             <template v-if="operators.sousuo!==undefined && operators.sousuo!==null && operators.sousuo.disable">
