@@ -168,7 +168,7 @@ export default{
             let tmpValue
             switch(desenseType){
                 case 0:
-                    temValue = value
+                    tmpValue = value
                     break
                 case 1:
                     tmpValue = desense.desensitizeCertID(value)
