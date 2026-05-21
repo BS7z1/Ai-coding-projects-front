@@ -324,7 +324,7 @@ export default{
     data(){
         return {
             advancedParamModels: {},
-            formObj: [],
+            columnTypeEnum: getColumnTypeEnum(),
             rules: {},
             formObj: []
         }
