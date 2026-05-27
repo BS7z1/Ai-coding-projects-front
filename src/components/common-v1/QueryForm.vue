@@ -325,8 +325,7 @@ export default{
         return {
             advancedParamModels: {},
             formObj: [],
-            rules: {},
-            formObj: []
+            rules: {}
         }
     },
     created: function(){

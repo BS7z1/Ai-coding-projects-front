@@ -2,48 +2,16 @@
   <div class="loan-ledger-container">
     <!-- 查询条件区 -->
     <el-card shadow="never" class="search-card">
-      <el-form :model="queryForm" :inline="true" size="small">
-        <el-form-item label="借据号">
-          <el-input v-model="queryForm.loanId" placeholder="模糊查询" clearable />
-        </el-form-item>
-        <el-form-item label="公司名称">
-          <el-input v-model="queryForm.companyName" placeholder="模糊查询" clearable />
-        </el-form-item>
-        <el-form-item label="台账状态">
-          <el-select v-model="queryForm.status" placeholder="全部" clearable>
-            <el-option :value="0" label="草稿" />
-            <el-option :value="1" label="待复核" />
-            <el-option :value="2" label="已通过" />
-            <el-option :value="3" label="已拒绝" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="放款日期">
-          <el-date-picker
-            v-model="loanDateRange"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            value-format="yyyy-MM-dd"
-          />
-        </el-form-item>
-        <el-form-item label="绿色信贷">
-          <el-select v-model="queryForm.isGreen" placeholder="全部" clearable>
-            <el-option :value="1" label="是" />
-            <el-option :value="0" label="否" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="涉农">
-          <el-select v-model="queryForm.isAgriculture" placeholder="全部" clearable>
-            <el-option :value="1" label="是" />
-            <el-option :value="0" label="否" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
-          <el-button icon="el-icon-refresh" @click="handleReset">重置</el-button>
-        </el-form-item>
-      </el-form>
+      <query-form
+          :key="queryFormKey"
+          :table-form="queryTableForm"
+          :advanced-default-params="queryForm"
+          :label-width="'100px'"
+          :label-position="'right'"
+          :col-num="3"
+          :operators="queryOperators"
+          @query="handleQuery"
+      />
     </el-card>
 
     <!-- 操作栏 + 列表 -->
@@ -55,157 +23,45 @@
         <el-button icon="el-icon-download" @click="handleExport">导出</el-button>
       </div>
 
-      <el-table
-        :data="tableData"
-        border
-        stripe
-        style="width: 100%; margin-top: 12px"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="50" />
-        <el-table-column prop="loanId" label="借据号" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="companyName" label="公司名称" min-width="160" show-overflow-tooltip />
-        <el-table-column prop="creditCode" label="信用代码" width="150" />
-        <el-table-column prop="loanAmount" label="借据金额（元）" width="130">
-          <template slot-scope="scope">
-            {{ formatAmount(scope.row.loanAmount) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="interestRate" label="利率" width="90">
-          <template slot-scope="scope">
-            {{ scope.row.interestRate }}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="loanDate" label="放款日期" width="110" />
-        <el-table-column prop="dueDate" label="到期日期" width="110" />
-        <el-table-column label="绿色信贷" width="90">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.isGreen ? 'success' : 'info'" size="small">
-              {{ scope.row.isGreen ? '是' : '否' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="涉农" width="70">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.isAgriculture ? 'success' : 'info'" size="small">
-              {{ scope.row.isAgriculture ? '是' : '否' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="担保" width="70">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.isGuarantee ? 'warning' : 'info'" size="small">
-              {{ scope.row.isGuarantee ? '是' : '否' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="guaranteeOrg" label="担保机构" min-width="140" show-overflow-tooltip>
-          <template slot-scope="scope">
-            {{ scope.row.guaranteeOrg || '—' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="台账状态" width="100">
-          <template slot-scope="scope">
-            <el-tag :type="getStatusType(scope.row.status)" size="small">
-              {{ getStatusText(scope.row.status) }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
-          <template slot-scope="scope">
-            <template v-if="scope.row.status === 0">
-              <el-button type="text" @click="handleEdit(scope.row)">修改</el-button>
-              <el-button type="text" style="color: #f56c6c" @click="handleDelete(scope.row)">删除</el-button>
-              <el-button type="text" @click="handleSubmit(scope.row)">提交复核</el-button>
-            </template>
-            <template v-else-if="scope.row.status === 1">
-              <el-button type="text" @click="handleView(scope.row)">查看</el-button>
-            </template>
-            <template v-else-if="scope.row.status === 2">
-              <el-button type="text" @click="handleView(scope.row)">查看</el-button>
-            </template>
-            <template v-else-if="scope.row.status === 3">
-              <el-button type="text" @click="handleView(scope.row)">查看</el-button>
-              <el-button type="text" @click="handleEdit(scope.row)">修改</el-button>
-              <el-button type="text" @click="handleSubmit(scope.row)">提交复核</el-button>
-            </template>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div class="pagination">
-        <el-pagination
-          background
-          :current-page="pagination.pageNum"
-          :page-sizes="[20, 50, 100]"
-          :page-size="pagination.pageSize"
-          :total="pagination.total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @current-change="handlePageChange"
-          @size-change="handleSizeChange"
-        />
-      </div>
+      <table-data
+          :table-heads="tableHeads"
+          :table-data="tableData"
+          :hide-selection="false"
+          :operators="tableOperators"
+          :page-sizes="pageSizes"
+          :pager="tablePager"
+          :param="queryForm"
+          @selections="handleSelectionChange"
+          @currentChange="handleTableCurrentChange"
+          @sizeChange="handleTableSizeChange"
+          @showDetail="handleView"
+          @editRow="handleTableEdit"
+          @deleteRow="handleTableDelete"
+          @submitRow="handleTableSubmit"
+          @viewRow="handleTableView"
+      />
     </el-card>
 
     <!-- 新增/编辑弹窗 -->
     <el-dialog
-      :title="dialogTitle"
-      :visible.sync="dialogVisible"
-      width="680px"
-      :close-on-click-modal="false"
-      @close="handleDialogClose"
+        :title="dialogTitle"
+        :visible.sync="dialogVisible"
+        width="680px"
+        :close-on-click-modal="false"
     >
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="150px" size="small">
-        <el-form-item label="借据号" prop="loanId">
-          <el-input v-model="formData.loanId" maxlength="50" :disabled="isEdit" />
-        </el-form-item>
-        <el-form-item label="公司名称" prop="companyName">
-          <el-input v-model="formData.companyName" maxlength="200" />
-        </el-form-item>
-        <el-form-item label="企业统一信用代码" prop="creditCode">
-          <el-input v-model="formData.creditCode" maxlength="18" placeholder="18位字母数字" />
-        </el-form-item>
-        <el-form-item label="借据金额（元）" prop="loanAmount">
-          <el-input-number v-model="formData.loanAmount" :precision="2" :max="9999999999.99" :min="0" style="width: 100%" controls-position="right" />
-        </el-form-item>
-        <el-form-item label="年利率（%）" prop="interestRate">
-          <el-input-number v-model="formData.interestRate" :precision="4" :max="100" :min="0.0001" :step="0.01" style="width: 100%" controls-position="right" />
-        </el-form-item>
-        <el-form-item label="放款日期" prop="loanDate">
-          <el-date-picker v-model="formData.loanDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 100%" />
-        </el-form-item>
-        <el-form-item label="到期日期" prop="dueDate">
-          <el-date-picker v-model="formData.dueDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 100%" />
-        </el-form-item>
-        <el-form-item label="是否绿色信贷" prop="isGreen">
-          <el-radio-group v-model="formData.isGreen">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="是否涉农" prop="isAgriculture">
-          <el-radio-group v-model="formData.isAgriculture">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="是否有担保" prop="isGuarantee">
-          <el-radio-group v-model="formData.isGuarantee" @change="onGuaranteeChange">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item v-if="formData.isGuarantee === 1" label="担保机构" prop="guaranteeOrg">
-          <el-input v-model="formData.guaranteeOrg" maxlength="200" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="formData.remark" type="textarea" :rows="3" maxlength="500" show-word-limit />
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSave" :loading="saving">保存</el-button>
-      </div>
+      <!-- 使用 Edit.vue，只替换表单内容；保存接口仍在 LoanLedger.vue 中处理 -->
+      <edit
+          v-if="dialogVisible"
+          :origin-object="formData"
+          :table-form="editTableForm"
+          :loading="saving"
+          :col-num="1"
+          :is-edit="isEdit"
+          :label-width="'150px'"
+          :label-position="'right'"
+          @close="dialogVisible = false"
+          @saveObj="handleEditSave"
+      />
     </el-dialog>
 
     <!-- 查看详情弹窗 -->
@@ -285,10 +141,23 @@ import {
   batchDeleteLoanLedger, submitForReview, batchImport, exportList, checkLoanId, getDetail
 } from '@/api/loanLedger'
 
+import QueryForm from '@/components/common-v1/QueryForm'
+import TableData from '@/components/common-v1/TableData'
+import Edit from '@/components/common-v1/Edit'
+import { getColumnTypeEnum } from '@/api/app'
+
 export default {
   name: 'LoanLedger',
 
+  components: {
+    QueryForm,
+    TableData,
+    Edit
+  },
+
   data() {
+    const columnType = getColumnTypeEnum()
+
     const validateCreditCode = (rule, value, callback) => {
       if (value && !/^[A-Za-z0-9]{18}$/.test(value)) {
         callback(new Error('信用代码必须为 18 位字母数字组合'))
@@ -318,11 +187,177 @@ export default {
     }
 
     return {
+      columnType,
+
+      queryFormKey: 0,
+
       queryForm: {
-        loanId: '', companyName: '', status: null,
-        isGreen: null, isAgriculture: null
+        loanId: '',
+        companyName: '',
+        status: null,
+        loanDateRange: null,
+        isGreen: null,
+        isAgriculture: null
       },
-      loanDateRange: null,
+
+      queryTableForm: [
+        {
+          dataName: 'loanId',
+          showName: '借据号',
+          showAdcanced: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXT
+          }
+        },
+        {
+          dataName: 'companyName',
+          showName: '公司名称',
+          showAdcanced: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXT
+          }
+        },
+        {
+          dataName: 'status',
+          showName: '台账状态',
+          showAdcanced: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_SELECT,
+            list: [
+              { label: '草稿', value: 0 },
+              { label: '待复核', value: 1 },
+              { label: '已通过', value: 2 },
+              { label: '已拒绝', value: 3 }
+            ]
+          }
+        },
+        {
+          dataName: 'loanDateRange',
+          showName: '放款日期',
+          showAdcanced: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_DATE_RANGE
+          }
+        },
+        {
+          dataName: 'isGreen',
+          showName: '绿色信贷',
+          showAdcanced: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_SELECT,
+            list: [
+              { label: '是', value: 1 },
+              { label: '否', value: 0 }
+            ]
+          }
+        },
+        {
+          dataName: 'isAgriculture',
+          showName: '涉农',
+          showAdcanced: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_SELECT,
+            list: [
+              { label: '是', value: 1 },
+              { label: '否', value: 0 }
+            ]
+          }
+        }
+      ],
+
+      queryOperators: {
+        data: []
+      },
+
+      tableHeads: [
+        {
+          dataName: 'loanId',
+          showName: '借据号',
+          width: 140,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'companyName',
+          showName: '公司名称',
+          width: 160,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'creditCode',
+          showName: '信用代码',
+          width: 150,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'loanAmountText',
+          showName: '借据金额（元）',
+          width: 140,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'interestRateText',
+          showName: '利率',
+          width: 90,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'loanDate',
+          showName: '放款日期',
+          width: 120,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'dueDate',
+          showName: '到期日期',
+          width: 120,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'isGreenText',
+          showName: '绿色信贷',
+          width: 100,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'isAgricultureText',
+          showName: '涉农',
+          width: 80,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'isGuaranteeText',
+          showName: '担保',
+          width: 80,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'guaranteeOrgText',
+          showName: '担保机构',
+          width: 140,
+          columnTypeClass: { desenseType: 0 }
+        },
+        {
+          dataName: 'statusText',
+          showName: '台账状态',
+          width: 100,
+          columnTypeClass: { desenseType: 0 }
+        }
+      ],
+
+      tableOperators: {
+        width: 220,
+        data: [
+          [
+            { operator: '查看', method: 'viewRow', status: 'canView' },
+            { operator: '修改', method: 'editRow', status: 'canEdit' },
+            { operator: '删除', method: 'deleteRow', status: 'canDelete' },
+            { operator: '提交复核', method: 'submitRow', status: 'canSubmit' }
+          ]
+        ]
+      },
+      // TableData 分页大小配置
+      pageSizes: [20, 50, 100],
+
       tableData: [],
       selection: [],
       pagination: { pageNum: 1, pageSize: 20, total: 0 },
@@ -332,28 +367,163 @@ export default {
       isEdit: false,
       saving: false,
       formData: this.getEmptyForm(),
-      formRules: {
-        loanId: [
-          { required: true, message: '请输入借据号', trigger: 'blur' },
-          { validator: validateLoanId, trigger: 'blur' }
-        ],
-        companyName: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
-        creditCode: [
-          { required: true, message: '请输入信用代码', trigger: 'blur' },
-          { validator: validateCreditCode, trigger: 'blur' }
-        ],
-        loanAmount: [{ required: true, message: '请输入借据金额', trigger: 'blur' }],
-        interestRate: [{ required: true, message: '请输入利率', trigger: 'blur' }],
-        loanDate: [{ required: true, message: '请选择放款日期', trigger: 'change' }],
-        dueDate: [
-          { required: true, message: '请选择到期日期', trigger: 'change' },
-          { validator: validateDueDate, trigger: 'change' }
-        ],
-        isGreen: [{ required: true, message: '请选择是否绿色信贷', trigger: 'change' }],
-        isAgriculture: [{ required: true, message: '请选择是否涉农', trigger: 'change' }],
-        isGuarantee: [{ required: true, message: '请选择是否有担保', trigger: 'change' }],
-        guaranteeOrg: [{ required: true, message: '请填写担保机构', trigger: 'blur' }]
-      },
+
+      // Edit.vue / 编辑公共组件使用的字段配置
+      editTableForm: [
+        {
+          dataName: 'loanId',
+          showName: '借据号',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXT
+          },
+          rule: [
+            { required: true, message: '请输入借据号', trigger: 'blur' },
+            { validator: validateLoanId, trigger: 'blur' }
+          ]
+        },
+        {
+          dataName: 'companyName',
+          showName: '公司名称',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXT
+          },
+          rule: [
+            { required: true, message: '请输入公司名称', trigger: 'blur' }
+          ]
+        },
+        {
+          dataName: 'creditCode',
+          showName: '企业统一信用代码',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXT
+          },
+          rule: [
+            { required: true, message: '请输入信用代码', trigger: 'blur' },
+            { validator: validateCreditCode, trigger: 'blur' }
+          ]
+        },
+        {
+          dataName: 'loanAmount',
+          showName: '借据金额（元）',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXT
+          },
+          rule: [
+            { required: true, message: '请输入借据金额', trigger: 'blur' }
+          ]
+        },
+        {
+          dataName: 'interestRate',
+          showName: '年利率（%）',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXT
+          },
+          rule: [
+            { required: true, message: '请输入利率', trigger: 'blur' }
+          ]
+        },
+        {
+          dataName: 'loanDate',
+          showName: '放款日期',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_DATE
+          },
+          rule: [
+            { required: true, message: '请选择放款日期', trigger: 'change' }
+          ]
+        },
+        {
+          dataName: 'dueDate',
+          showName: '到期日期',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_DATE
+          },
+          rule: [
+            { required: true, message: '请选择到期日期', trigger: 'change' },
+            { validator: validateDueDate, trigger: 'change' }
+          ]
+        },
+        {
+          dataName: 'isGreen',
+          showName: '是否绿色信贷',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_RADIO,
+            list: [
+              { label: '是', value: 1 },
+              { label: '否', value: 0 }
+            ]
+          },
+          rule: [
+            { required: true, message: '请选择是否绿色信贷', trigger: 'change' }
+          ]
+        },
+        {
+          dataName: 'isAgriculture',
+          showName: '是否涉农',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_RADIO,
+            list: [
+              { label: '是', value: 1 },
+              { label: '否', value: 0 }
+            ]
+          },
+          rule: [
+            { required: true, message: '请选择是否涉农', trigger: 'change' }
+          ]
+        },
+        {
+          dataName: 'isGuarantee',
+          showName: '是否有担保',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_RADIO,
+            list: [
+              { label: '是', value: 1 },
+              { label: '否', value: 0 }
+            ]
+          },
+          rule: [
+            { required: true, message: '请选择是否有担保', trigger: 'change' }
+          ]
+        },
+        {
+          dataName: 'guaranteeOrg',
+          showName: '担保机构',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXT
+          }
+        },
+        {
+          dataName: 'remark',
+          showName: '备注',
+          showAdd: true,
+          showEdit: true,
+          columnTypeClass: {
+            columnType: columnType.TYPE_TEXTAREA
+          }
+        }
+      ],
 
       viewVisible: false,
       viewData: {},
@@ -365,42 +535,137 @@ export default {
     }
   },
 
+  computed: {
+    tablePager() {
+      return {
+        currentPage: this.pagination.pageNum,
+        pageSize: this.pagination.pageSize,
+        totalRows: this.pagination.total
+      }
+    }
+  },
+
   methods: {
+    handleEditSave(data) {
+      const submitData = {
+        ...this.formData,
+        ...data
+      }
+
+      if (submitData.isGuarantee === 1 && !submitData.guaranteeOrg) {
+        this.$message.warning('选择"有担保"时，担保机构不能为空')
+        return
+      }
+
+      this.saving = true
+
+      const apiCall = this.isEdit
+          ? updateLoanLedger(submitData, 'currentUser')
+          : addLoanLedger(submitData, 'currentUser')
+
+      apiCall.then(() => {
+        this.$message.success(this.isEdit ? '修改成功' : '新增成功')
+        this.dialogVisible = false
+        this.fetchData()
+      }).finally(() => {
+        this.saving = false
+      })
+    },
+
+    handleTableCurrentChange({ currentPage, pageSize }) {
+      this.pagination.pageNum = currentPage
+      this.pagination.pageSize = pageSize
+      this.fetchData()
+    },
+
+    handleTableSizeChange({ pageSize }) {
+      this.pagination.pageSize = pageSize
+      this.pagination.pageNum = 1
+      this.fetchData()
+    },
+
+    handleTableEdit({ data }) {
+      this.handleEdit(data)
+    },
+
+    handleTableDelete({ data }) {
+      this.handleDelete(data)
+    },
+
+    handleTableSubmit({ data }) {
+      this.handleSubmit(data)
+    },
+
+    handleTableView({ data }) {
+      this.handleView(data)
+    },
+
+    normalizeTableRow(row) {
+      return {
+        ...row,
+        loanAmountText: this.formatAmount(row.loanAmount),
+        interestRateText: row.interestRate == null ? '' : row.interestRate + '%',
+        isGreenText: row.isGreen ? '是' : '否',
+        isAgricultureText: row.isAgriculture ? '是' : '否',
+        isGuaranteeText: row.isGuarantee ? '是' : '否',
+        guaranteeOrgText: row.guaranteeOrg || '-',
+        statusText: this.getStatusText(row.status),
+        canView: row.status !== 0,
+        canEdit: row.status === 0 || row.status === 3,
+        canDelete: row.status === 0,
+        canSubmit: row.status === 0 || row.status === 3
+      }
+    },
+
     // ============ 查询 ============
-    handleQuery() {
+    handleQuery(params) {
+      this.queryForm = {
+        ...this.queryForm,
+        ...params
+      }
       this.pagination.pageNum = 1
       this.fetchData()
     },
     handleReset() {
-      this.queryForm = { loanId: '', companyName: '', status: null, isGreen: null, isAgriculture: null }
-      this.loanDateRange = null
+      this.queryForm = {
+        loanId: '',
+        companyName: '',
+        status: null,
+        loanDateRange: null,
+        isGreen: null,
+        isAgriculture: null
+      }
+      this.queryFormKey += 1
       this.pagination.pageNum = 1
       this.fetchData()
     },
     fetchData() {
       const params = { ...this.queryForm }
-      if (this.loanDateRange && this.loanDateRange.length === 2) {
-        params.loanDateStart = this.loanDateRange[0]
-        params.loanDateEnd = this.loanDateRange[1]
+
+      if (params.loanDateRange && params.loanDateRange.length === 2) {
+        params.loanDateStart = params.loanDateRange[0]
+        params.loanDateEnd = params.loanDateRange[1]
       }
-      queryPage(params, { pageNum: this.pagination.pageNum, pageSize: this.pagination.pageSize }, 'currentUser', 'applicant')
-        .then(res => {
-          this.tableData = res.data.records || []
-          this.pagination.total = res.data.total || 0
-        }).catch(() => {
-          this.tableData = []
-          this.pagination.total = 0
-        })
+
+      delete params.loanDateRange
+
+      queryPage(
+          params,
+          {
+            pageNum: this.pagination.pageNum,
+            pageSize: this.pagination.pageSize
+          },
+          'currentUser',
+          'applicant'
+      ).then(res => {
+        this.tableData = (res.data.records || []).map(this.normalizeTableRow)
+        this.pagination.total = res.data.total || 0
+      }).catch(() => {
+        this.tableData = []
+        this.pagination.total = 0
+      })
     },
-    handlePageChange(pageNum) {
-      this.pagination.pageNum = pageNum
-      this.fetchData()
-    },
-    handleSizeChange(pageSize) {
-      this.pagination.pageSize = pageSize
-      this.pagination.pageNum = 1
-      this.fetchData()
-    },
+
     handleSelectionChange(val) {
       this.selection = val
     },
@@ -411,7 +676,6 @@ export default {
       this.isEdit = false
       this.formData = this.getEmptyForm()
       this.dialogVisible = true
-      this.$nextTick(() => this.$refs.formRef && this.$refs.formRef.clearValidate())
     },
 
     // ============ 编辑 ============
@@ -420,28 +684,6 @@ export default {
       this.isEdit = true
       this.formData = { ...row }
       this.dialogVisible = true
-      this.$nextTick(() => this.$refs.formRef && this.$refs.formRef.clearValidate())
-    },
-
-    // ============ 保存 ============
-    handleSave() {
-      this.$refs.formRef.validate(valid => {
-        if (!valid) return
-        // 担保机构条件校验
-        if (this.formData.isGuarantee === 1 && !this.formData.guaranteeOrg) {
-          this.$message.warning('选择"有担保"时，担保机构不能为空')
-          return
-        }
-        this.saving = true
-        const apiCall = this.isEdit
-          ? updateLoanLedger(this.formData, 'currentUser')
-          : addLoanLedger(this.formData, 'currentUser')
-        apiCall.then(() => {
-          this.$message.success(this.isEdit ? '修改成功' : '新增成功')
-          this.dialogVisible = false
-          this.fetchData()
-        }).finally(() => { this.saving = false })
-      })
     },
 
     // ============ 删除 ============
@@ -533,13 +775,6 @@ export default {
       if (val !== 1) {
         this.formData.guaranteeOrg = ''
       }
-    },
-    handleDialogClose() {
-      this.$refs.formRef && this.$refs.formRef.resetFields()
-    },
-    getStatusType(status) {
-      const map = { 0: 'info', 1: 'warning', 2: 'success', 3: 'danger' }
-      return map[status] || 'info'
     },
     getStatusText(status) {
       const map = { 0: '草稿', 1: '待复核', 2: '已通过', 3: '已拒绝' }
