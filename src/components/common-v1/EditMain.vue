@@ -19,7 +19,7 @@
     </cb-drawer>
 </template>
 <script>
-import { sendDwrRequest } from '@api/app'
+import { sendDwrRequest } from '@/api/app'
 import Edit from '@/components/common-v1/Edit'
 export default{
     props: [

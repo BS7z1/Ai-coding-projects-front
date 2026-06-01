@@ -308,7 +308,7 @@
     </cb-form>
 </template>
 <script>
-import {getColumnTypeEnum} from '@api/app.js'
+import {getColumnTypeEnum} from '@/api/app'
 export default{
     name: 'query-form',
     props: [
