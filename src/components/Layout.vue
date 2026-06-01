@@ -12,41 +12,35 @@
         active-text-color="#409EFF"
         router
       >
-        <!-- 业务管理 -->
-        <el-submenu index="business">
+        <!-- 北京 -->
+        <el-submenu index="/beijing">
           <template slot="title">
-            <i class="el-icon-s-management"></i>
-            <span>业务管理</span>
-          </template>
-          
-          <!-- 北京 -->
-          <el-menu-item index="/business/beijing">
             <i class="el-icon-location"></i>
-            <span slot="title">北京</span>
-          </el-menu-item>
-          
-          <!-- 代码生成 -->
-          <el-menu-item index="/business/codegen">
-            <i class="el-icon-document-copy"></i>
-            <span slot="title">代码生成</span>
-          </el-menu-item>
+            <span>北京</span>
+          </template>
+
+          <!-- 信贷借据管理 -->
+          <el-submenu index="/beijing/loan">
+            <template slot="title">
+              <i class="el-icon-s-order"></i>
+              <span>信贷借据管理</span>
+            </template>
+            <el-menu-item index="/beijing/loan-ledger">
+              <i class="el-icon-s-grid"></i>
+              <span slot="title">借据台账管理</span>
+            </el-menu-item>
+            <el-menu-item index="/beijing/loan-review">
+              <i class="el-icon-s-check"></i>
+              <span slot="title">借据复核审批</span>
+            </el-menu-item>
+          </el-submenu>
         </el-submenu>
 
-        <!-- 信贷借据管理 -->
-        <el-submenu index="loan">
-          <template slot="title">
-            <i class="el-icon-s-order"></i>
-            <span>信贷借据管理</span>
-          </template>
-          <el-menu-item index="/business/loan-ledger">
-            <i class="el-icon-s-grid"></i>
-            <span slot="title">借据台账管理</span>
-          </el-menu-item>
-          <el-menu-item index="/business/loan-review">
-            <i class="el-icon-s-check"></i>
-            <span slot="title">借据复核审批</span>
-          </el-menu-item>
-        </el-submenu>
+        <!-- 代码生成 -->
+        <el-menu-item index="/business/codegen">
+          <i class="el-icon-document-copy"></i>
+          <span slot="title">代码生成</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     
@@ -54,12 +48,13 @@
     <el-container>
       <el-header style="background-color: #fff; border-bottom: 1px solid #e6e6e6; display: flex; align-items: center; justify-content: space-between;">
         <span style="font-size: 16px;">{{ currentTitle }}</span>
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
           <span style="cursor: pointer;">
-            管理员 <i class="el-icon-arrow-down"></i>
+            <i class="el-icon-user-solid" style="margin-right: 4px;"></i>
+            {{ displayName }} <i class="el-icon-arrow-down"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item command="logout" icon="el-icon-switch-button">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -72,11 +67,14 @@
 </template>
 
 <script>
+import { logout } from '@/api/app'
+
 export default {
   name: 'Layout',
   data() {
     return {
-      currentTitle: '业务管理'
+      currentTitle: '业务管理',
+      displayName: '用户'
     }
   },
   computed: {
@@ -92,16 +90,46 @@ export default {
   methods: {
     updateTitle(path) {
       const titleMap = {
-        '/business/beijing': '北京',
-        '/business/codegen': '代码生成',
-        '/business/loan-ledger': '借据台账管理',
-        '/business/loan-review': '借据复核审批'
+        '/beijing/loan-ledger': '借据台账管理',
+        '/beijing/loan-review': '借据复核审批',
+        '/business/codegen': '代码生成'
       }
-      this.currentTitle = titleMap[path] || '业务管理'
+      this.currentTitle = titleMap[path] || '业务管理系统'
+    },
+    handleCommand(command) {
+      if (command === 'logout') {
+        this.handleLogout()
+      }
+    },
+    handleLogout() {
+      this.$confirm('确定要退出登录吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 调用后端注销接口（不阻塞，失败也继续清理本地状态）
+        logout().catch(() => {})
+        // 清除本地登录状态
+        localStorage.removeItem('loginUser')
+        this.$message.success('已退出登录')
+        this.$router.push('/login')
+      }).catch(() => {})
+    },
+    loadUserInfo() {
+      const loginUser = localStorage.getItem('loginUser')
+      if (loginUser) {
+        try {
+          const user = JSON.parse(loginUser)
+          this.displayName = user.realName || user.username || '用户'
+        } catch (e) {
+          this.displayName = '用户'
+        }
+      }
     }
   },
   created() {
     this.updateTitle(this.$route.path)
+    this.loadUserInfo()
   }
 }
 </script>
