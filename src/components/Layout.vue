@@ -34,6 +34,18 @@
               <span slot="title">借据复核审批</span>
             </el-menu-item>
           </el-submenu>
+
+          <!-- 初始模板 -->
+          <el-submenu index="/beijing/template">
+            <template slot="title">
+              <i class="el-icon-s-order"></i>
+              <span>初始模板</span>
+            </template>
+            <el-menu-item index="/beijing/template/templateSinglePk">
+              <i class="el-icon-s-grid"></i>
+              <span slot="title">单主键模板</span>
+            </el-menu-item>
+          </el-submenu>
         </el-submenu>
 
         <!-- 代码生成 -->
@@ -92,6 +104,7 @@ export default {
       const titleMap = {
         '/beijing/loan-ledger': '借据台账管理',
         '/beijing/loan-review': '借据复核审批',
+        '/beijing/template/templateSinglePk': '单主键模板',
         '/business/codegen': '代码生成'
       }
       this.currentTitle = titleMap[path] || '业务管理系统'

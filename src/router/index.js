@@ -32,6 +32,13 @@ const routes = [
         component: () => import('@/modules/xxxxmgr/modules/beijing/modules/loan-ledger/pages/LoanReview.vue'),
         meta: { title: '借据复核审批' }
       },
+      // ============ 北京 > 初始模板 ============
+      {
+        path: 'beijing/template/templateSinglePk',
+        name: 'templateSinglePk',
+        component: () => import('@/modules/xxxxmgr/modules/beijing/modules/template/pages/templateSinglePk.vue'),
+        meta: { title: '单主键模板' }
+      },
       // ============ 代码生成 ============
       {
         path: 'business/codegen',
