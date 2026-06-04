@@ -346,7 +346,7 @@ export default{
             let form = []
             let i = 0
             for(let ind in this.tableForm){
-                if(!this.tableForm[ind].showAdcanced){continue}
+                if(!this.tableForm[ind].showAdvanced){continue}
                 i+=1
                 form.push(this.tableForm[ind])
                 if(this.colNum === i){

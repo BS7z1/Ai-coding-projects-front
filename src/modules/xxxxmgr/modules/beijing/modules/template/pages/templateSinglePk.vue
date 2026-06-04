@@ -135,8 +135,8 @@ export default {
         editPara: {},
         editTableForm: null,
         editSaveUri: '/api/beijing/template/dwrTemplateSinglePkService/updateTemplateSinglePk',
-        addSaveUri: '/api/beijing/template/dwrTemplateSinglePkService/addTemplateSinglePk',
-        paraName: templateSinglePk,
+        addSaveUri: '/api/beijing/template/dwrTemplateSinglePkService/saveTemplateSinglePk',
+        paraName: 'templateSinglePk',
         editMainColNum: 2,
         editDrawerSize: '50%',
         editLabelWidth: '150px',
@@ -151,7 +151,182 @@ export default {
         advancedParams: {},
         advancedQueryUri: '/api/beijing/template/dwrTemplateSinglePkService/listTemplateSinglePk',
         selections: [],
-        rawParams:[]
+        
+        // 字段校验方法，对 编辑、新增有效
+        // 校验方法样例1:方法定义在data，rule定义在rawParams
+        // var validateMethod = (rule, value, callback)=>{
+        //     if(value==='1'){
+        //         callback(new Error('请输入xxx'))
+        //     }else{
+        //         callback()
+        //     }
+        // }
+        // rule: [{validator: validateMethod, trigger: 'blur'}]
+        // 校验方法样例2:rule放在rawParams中
+        // rule: [{required: true, message: '请输入xxx' trigger: 'blur'}]
+        
+        // 查询字段校验方法，对 高级查询有效
+        // queryRule: [{required: true, message: '请输入xxx' trigger: 'blur'}]
+
+        // 多选框定义方法
+        // columnTypeClass: {
+        //     columnType: columnTypeEnum.TYPE_SELECT,
+        //     list:[
+        //         { label: '多选项一', value: 'Option1', isChecked: false},
+        //         { label: '多选项二', value: 'Option2', isChecked: true}
+        //     ],
+        //     desenseType: desenseTypeEnum.TYPE_UNDESENSE
+        // }
+
+        rawParams:[
+            {
+                dataName: 'tskId',
+                showName: '流水号',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_TEXT,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'loanId',
+                showName: '借据号',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_TEXT,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'companyName',
+                showName: '公司名称',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_TEXT,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'creditCode',
+                showName: '企业统一信用代码',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_TEXT,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'amount',
+                showName: '借据金额（元）',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_TEXT,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'interestRate',
+                showName: '利率（%）',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_TEXT,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'isValid',
+                showName: '是否有效',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_SELECT,
+                    list:[
+                        { label: '否', value: '0', isChecked: false},
+                        { label: '是', value: '1', isChecked: false}
+                    ],
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'empNo',
+                showName: '用户工号',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_TEXT,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'empNm',
+                showName: '用户名称',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_TEXT,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'startTm',
+                showName: '起始时间',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_DATE,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            },
+            {
+                dataName: 'updatedTm',
+                showName: '更新时间',
+                showColumn: 'true',
+                showAdd: 'true',
+                showAdvanced: 'true',
+                showDetail: 'true',
+                showEdit: 'true',
+                columnTypeClass: {
+                    columnType: columnTypeEnum.TYPE_DATE_TIME,
+                    desenseType: desenseTypeEnum.TYPE_UNDESENSE
+                }
+            }
+        ]
     }
   },
   created: function(){
@@ -233,7 +408,7 @@ export default {
                 for(let i = 0; i <len; i++){
                     let listEle = list[i]
                     let newEle = {}
-                    for(let j = 0;i<rawParamsLen; j++){
+                    for(let j = 0; j < rawParamsLen; j++){
                         let rawParam = this.rawParams[j]
                         let dataName = rawParam.dataName
                         let valueMapList = rawParam.columnTypeClass
@@ -277,7 +452,7 @@ export default {
     addRow(){
         this.editType = '新增'
         this.isOpen = true
-        this.editPara = data.data
+        this.editPara = this.editParaDefault
         this.editTableForm = this.addTableFormDefault
     },
     advancedQuery(inputAdvancedParams){
@@ -322,7 +497,7 @@ export default {
     },
     showDetail(data){
         let primaryKey = data.primaryKey
-        this.detailVisible = !this.deleteVisible
+        this.detailVisible = !this.detailVisible
         this.detailParams = { 'pk': primaryKey }
     },
     handleSelectionChange(selections){

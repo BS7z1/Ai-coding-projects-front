@@ -65,7 +65,9 @@ Vue.component('cb-table-column', TableColumn)
 Vue.component('cb-pagination', Pagination)
 Vue.component('cb-scrollbar', {
   render(h) {
-    return h('div', this.$slots.default)
+    return h('div', {
+      style: { overflow: 'auto', height: '100%' }
+    }, this.$slots.default)
   }
 })
 Vue.component('cb-dialog', Dialog)
