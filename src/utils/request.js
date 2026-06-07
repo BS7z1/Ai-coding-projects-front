@@ -21,22 +21,22 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
     response => {
-        const res = response.data
+        const res = response
 
         /**
          * 兼容新返回格式：
          * { code: 200, message: '成功', data: ... }
          */
-        if (res.code === 200) {
+        if (res.data.code === 200) {
             return res
         }
 
         /**
          * 401：未登录或登录过期，跳转到登录页
          */
-        if (res.code === 401) {
+        if (res.data.code === 401) {
             Message({
-                message: res.message || '登录已过期，请重新登录',
+                message: res.data.message || '登录已过期，请重新登录',
                 type: 'warning',
                 duration: 2000
             })
@@ -46,29 +46,27 @@ service.interceptors.response.use(
             if (router.currentRoute.path !== '/login') {
                 router.push({ path: '/login', query: { redirect: router.currentRoute.fullPath } })
             }
-            return Promise.reject(new Error(res.message || '未登录'))
+            return Promise.reject(new Error(res.data.message || '未登录'))
         }
 
         /**
          * 兼容旧返回格式 ResultBean：
          * { success: true, message: '查询成功', resultList: [...] }
          */
-        if (res.success === true) {
-            const resultList = res.resultList || []
+        if (res.data.success === true) {
+            const resultList = res.data.resultList || []
 
             return {
                 code: 200,
                 success: true,
-                message: res.message || '操作成功',
+                message: res.data.message || '操作成功',
                 resultList: resultList,
-                pager: res.pager,
-
-                // 兼容原来页面使用 res.data 的写法
-                data: resultList.length === 1 ? resultList[0] : resultList
+                pager: res.data.pager,
+                data: res.data
             }
         }
 
-        const message = res.message || '请求失败'
+        const message = res.data.message || '请求失败'
 
         Message({
             message,

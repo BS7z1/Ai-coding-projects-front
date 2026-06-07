@@ -10,8 +10,8 @@
                 :row-style="{height:'20px'}"
                 stripe
                 border
-                hieght="500"
-                size="smail"
+                height="500"
+                size="small"
                 ref="tableSample"
                 @selection-change="handleSelectionChange"
             >

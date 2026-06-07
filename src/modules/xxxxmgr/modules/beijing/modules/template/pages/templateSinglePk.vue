@@ -28,7 +28,7 @@
              style="margin-top: 10px;"
             >批量删除</cb-button>
         </cb-header>
-        <cb-container style="height: 100%;" class="container-table-box">
+        <cb-container style="height: 100%;" class="container-table-Box">
             <table-data
              class="tableBox"
              v-loading="loading"

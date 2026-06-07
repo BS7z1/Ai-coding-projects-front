@@ -36,11 +36,16 @@ import ElementUI, {
   Alert,
   Tag,
   Tabs,
-  TabPane
+  TabPane,
+  Header,
+  Collapse,
+  CollapseItem
 } from 'element-ui'
 
 Vue.use(ElementUI)
-
+Vue.component('cb-header', Header)
+Vue.component('cb-collapse', Collapse)
+Vue.component('cb-collapse-item', CollapseItem)
 Vue.component('cb-form', Form)
 Vue.component('cb-form-item', FormItem)
 Vue.component('cb-input', Input)
