@@ -1,5 +1,5 @@
 <template>
-    <cb-container style="height: calc(100vh-100px);overflow-y: auto;" class="containerBox">
+    <cb-container style="height: calc(100vh-100px);overflow-y: auto;flex-direction: column;" class="containerBox">
         <cb-header style="height: auto;">
             <cb-collapse value="1" class="collapseBox">
                 <cb-collapse-item title="高级查询" name="1" class="collapse-item-Box">
@@ -28,7 +28,7 @@
              style="margin-top: 10px;"
             >批量删除</cb-button>
         </cb-header>
-        <cb-container style="height: 100%;" class="container-table-Box">
+        <cb-container style="height: 100%;flex-direction: column;" class="container-table-Box">
             <table-data
              class="tableBox"
              v-loading="loading"
