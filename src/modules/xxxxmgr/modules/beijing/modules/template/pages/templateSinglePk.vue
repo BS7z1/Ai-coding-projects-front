@@ -1,5 +1,5 @@
 <template>
-    <cb-container style="height: calc(100vh-100px);overflow-y: auto;" class="containerBox">
+    <cb-container style="height: calc(100vh - 100px); overflow-y: auto;" class="containerBox">
         <cb-header style="height: auto;">
             <cb-collapse value="1" class="collapseBox">
                 <cb-collapse-item title="高级查询" name="1" class="collapse-item-Box">
@@ -520,6 +520,9 @@ export default {
 }
 </script>
 <style scoped>
+.containerBox{
+    flex-direction: column;  /* 外部环境保留，内部请注解 */
+}
 .collapseBox{
     background-color: white !important;
     border-bottom: 1px solid rgb(214, 214, 214);
@@ -529,6 +532,7 @@ export default {
 }
 .container-table-Box{
     height: auto;
+    display: block;
 }
 .tableBox{
     height: 100%;

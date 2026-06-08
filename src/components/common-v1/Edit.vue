@@ -267,7 +267,7 @@
 <script>
 import { getColumnTypeEnum } from '@/api/app.js';
 export default {
-    name: 'query-form',
+    name: 'edit',
     props: [
         'tableForm',
         'originObject',

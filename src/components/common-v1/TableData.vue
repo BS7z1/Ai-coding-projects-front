@@ -1,5 +1,5 @@
 <template>
-    <cb-container style = "height: 100%">
+    <cb-container style = "height: 100%" class="containerBox">
         <cb-main ref="tableMain" style="height: 100%">
             <cb-table
                 class="tableData"
@@ -197,4 +197,7 @@ export default{
 }
 </script>
 <style scoped>
+.containerBox{
+    flex-direction: column; /* 外部环境保留，内部请注解 */
+}
 </style>
