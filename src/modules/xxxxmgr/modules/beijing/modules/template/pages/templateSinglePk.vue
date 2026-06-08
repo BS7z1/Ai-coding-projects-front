@@ -180,13 +180,14 @@ export default {
 
         rawParams:[
             {
-                dataName: 'tskId',
+                dataName: 'primaryKey',
                 showName: '流水号',
                 showColumn: 'true',
                 showAdd: 'true',
                 showAdvanced: 'true',
                 showDetail: 'true',
                 showEdit: 'true',
+                editDisabled: 'true',
                 columnTypeClass: {
                     columnType: columnTypeEnum.TYPE_TEXT,
                     desenseType: desenseTypeEnum.TYPE_UNDESENSE

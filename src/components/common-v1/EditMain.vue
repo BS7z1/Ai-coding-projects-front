@@ -87,7 +87,7 @@ export default{
                         type: 'success',
                         duration: 5000
                     })
-                    this.$emit('save')
+                    this.$emit('save', true)
                 }else{
                     this.$notify.error({
                         title: '错误',
@@ -97,7 +97,7 @@ export default{
                     })
                 }
             })
-        },
+        }
     }
 }
 </script>
