@@ -1,5 +1,5 @@
 <template>
-    <cb-container style="height: calc(100vh-100px);overflow-y: auto;" class="containerBox">
+    <cb-container style="height: calc(100vh - 100px);overflow-y: auto;" class="containerBox">
         <cb-header style="height: auto;">
             <cb-collapse value="1" class="collapseBox">
                 <cb-collapse-item title="高级查询" name="1" class="collapse-item-Box">

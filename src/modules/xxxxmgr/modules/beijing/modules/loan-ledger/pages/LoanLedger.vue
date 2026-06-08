@@ -361,8 +361,8 @@ export default {
 
       // EditMain 使用。假设后端已提供 DWR 风格新增/修改 URI
       //TODO 具体地址要修改
-      addSaveUri: '/api/dwr/loan-ledger/add',
-      editSaveUri: '/api/dwr/loan-ledger/update',
+      addSaveUri: '/api/loan-ledger/add',
+      editSaveUri: '/api/loan-ledger/update',
 
       // Edit.vue / 编辑公共组件使用的字段配置
       editTableForm: [
@@ -524,7 +524,7 @@ export default {
       // Detail.vue 使用。假设后端已提供 DWR 风格详情 URI
       viewVisible: false,
       //TODO 具体地址要修改
-      detailUri: '/api/dwr/loan-ledger/detail',
+      detailUri: '/api/loan-ledger/detail',
       detailParams: {},
       detailTableHeads: [
         { dataName: 'loanId', showName: '借据号' },
@@ -553,7 +553,7 @@ export default {
       deleteVisible: false,
       deleteConfirmInfo: '',
       //TODO 具体地址要修改
-      deleteUri: '/api/dwr/loan-ledger/delete',
+      deleteUri: '/api/loan-ledger/delete',
       deleteParams: {},
 
       importVisible: false,

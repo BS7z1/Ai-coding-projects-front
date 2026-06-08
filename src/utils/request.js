@@ -55,16 +55,25 @@ service.interceptors.response.use(
          */
         if (res.success === true) {
             const resultList = res.resultList || []
+            const rawData = resultList.length === 1 ? resultList[0] : resultList
+
+            const compatData =
+                rawData && typeof rawData === 'object' && !Array.isArray(rawData)
+                    ? { ...rawData }
+                    : { data: rawData }
+
+            compatData.success = true
+            compatData.message = res.message || '操作成功'
+            compatData.resultList = resultList
+            compatData.pager = res.pager
 
             return {
                 code: 200,
                 success: true,
                 message: res.message || '操作成功',
-                resultList: resultList,
+                resultList,
                 pager: res.pager,
-
-                // 兼容原来页面使用 res.data 的写法
-                data: resultList.length === 1 ? resultList[0] : resultList
+                data: compatData
             }
         }
 
