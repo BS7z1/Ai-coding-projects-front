@@ -398,9 +398,9 @@ export default {
                     for(let i=0; i<tempArrLen; i++){
                         if(tempObj[tempArr[i]]===undefined){
                             if(i < tempArrLen-1){
-                                tempObj[tempArr[j]] = {}
+                                tempObj[tempArr[i]] = {}
                             }else{
-                                tempObj[tempArr[j]] = this.formModelAccess[temp.dataName]
+                                tempObj[tempArr[i]] = this.formModelAccess[temp.dataName]
                             }
                         }
                         tempObj = tempObj[tempArr[i]]

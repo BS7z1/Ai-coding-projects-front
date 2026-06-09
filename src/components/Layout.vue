@@ -45,6 +45,10 @@
               <i class="el-icon-s-grid"></i>
               <span slot="title">单主键模板</span>
             </el-menu-item>
+            <el-menu-item index="/beijing/template/templateCompPk">
+              <i class="el-icon-s-grid"></i>
+              <span slot="title">联合主键模板</span>
+            </el-menu-item>
           </el-submenu>
         </el-submenu>
 
@@ -105,6 +109,7 @@ export default {
         '/beijing/loan-ledger': '借据台账管理',
         '/beijing/loan-review': '借据复核审批',
         '/beijing/template/templateSinglePk': '单主键模板',
+        '/beijing/template/templateCompPk': '联合主键模板',
         '/business/codegen': '代码生成'
       }
       this.currentTitle = titleMap[path] || '业务管理系统'

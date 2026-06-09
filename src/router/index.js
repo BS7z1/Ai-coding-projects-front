@@ -39,6 +39,12 @@ const routes = [
         component: () => import('@/modules/xxxxmgr/modules/beijing/modules/template/pages/templateSinglePk.vue'),
         meta: { title: '单主键模板' }
       },
+      {
+        path: 'beijing/template/templateCompPk',
+        name: 'templateCompPk',
+        component: () => import('@/modules/xxxxmgr/modules/beijing/modules/template/pages/templateCompPk.vue'),
+        meta: { title: '联合主键模板' }
+      },
       // ============ 代码生成 ============
       {
         path: 'business/codegen',
